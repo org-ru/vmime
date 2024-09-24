@@ -993,13 +993,21 @@ public:
 						valid = true;
 						end = true;
 
-					} else if (c >= 0x01 && c <= 0x7f &&  // CHAR
-					           c != 0x0a && c != 0x0d) {  // CR and LF
+                    } else if (c != 0x0a && c != 0x0d) { // CR and LF
 
-						value += c;
+                        if (!parser.isStrict() || (c >= 0x01 && c <= 0x7f)) {  // CHAR or any byte in non-strict mode
 
-						++pos;
-						++len;
+                            value += c;
+
+                            ++pos;
+                            ++len;
+
+                        } else {
+
+                            valid = false;
+                            end = true;
+
+                        }
 
 					} else {
 
